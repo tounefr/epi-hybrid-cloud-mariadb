@@ -43,6 +43,15 @@
     - service:
         name: mariadb
         state: started
+- name: Stop firewalld
+  hosts:
+    - db-slaves
+    - db-master
+  become: true
+  tasks:
+    - service:
+        name: firewalld
+        state: stopped
 - name: Configure slaves
   hosts: db-slaves
   become: true
@@ -58,7 +67,7 @@
         master_user: 'epitech'
         master_password: 'Epitech_1*'
         master_log_file: 'mysql-replication.000002'
-        master_log_pos: 336
+        master_log_pos: 499
     - mysql_replication:
         mode: startslave
 - name: Check slaves
