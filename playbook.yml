@@ -1,11 +1,12 @@
 ---
 - name: Install mariadb server
-  hosts: db-slaves
-  user: epitech
+  hosts:
+    - db-slaves
+    - db-master
   become: true
   vars:
     mariadb_mirror: 'mariadb.mirror.nucleus.be/yum'
-    mariadb_bind_address: '127.0.0.1'
+    mariadb_bind_address: '0.0.0.0'
     mariadb_root_password: 'Epitech_1*'
     mariadb_server_cnf:
       general-log:
@@ -14,6 +15,8 @@
       slow-query-log-file: 'mariadb-slow.log'
       long-query-time: '5.0'
       server-id: "{{ server_id }}"
+      log-error: '/var/log/mariadb/mysql.err'
+      log-bin: '/var/log/mariadb/mysql-replication.log'
     mariadb_custom_cnf:
       mariadb:
         autoset_open_files_limit:
@@ -22,11 +25,26 @@
         language: /usr/share/mysql/dutch
     mariadb_configure_swappiness: true
     mariadb_swappiness: '10'
+    #    mariadb_databases:
+    #      - name: epitech 
+        #    mariadb_users:
+        #      - name: epitech
+        #       password: 'Epitech_1*'
+        #       priv: 'epitech.*:ALL'
+        #        host: '%'
   roles:
     - role: bertvv.mariadb
+- name: Start mariadb
+  hosts:
+    - db-slaves
+    - db-master
+  become: true
+  tasks:
+    - service:
+        name: mariadb
+        state: started
 - name: Configure slaves
   hosts: db-slaves
-  user: epitech
   become: true
   tasks:
     - mysql_replication:
@@ -37,15 +55,14 @@
         master_port: 3306
         master_ssl: false
         master_connect_retry: 10
-        master_user: epitech
+        master_user: 'epitech'
         master_password: 'Epitech_1*'
-        #master_log_file: mariadb-bin.000096
-        #master_log_pos: 568
+        master_log_file: 'mysql-replication.000002'
+        master_log_pos: 336
     - mysql_replication:
         mode: startslave
 - name: Check slaves
   hosts: db-slaves
-  user: epitech
   become: true
   tasks:
     - mysql_replication:
