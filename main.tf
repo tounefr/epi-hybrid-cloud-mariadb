@@ -1,55 +1,55 @@
-resource "azurerm_resource_group" "mariadb_client" {
-  name     = "mariadb_client-resources"
+resource "azurerm_resource_group" "mariadb_client_westeurope" {
+  name     = "resource_group_westeurope"
   location = "West Europe"
 }
 
-resource "azurerm_virtual_network" "mariadb_client" {
-  name                = "mariadb_client-network"
+resource "azurerm_virtual_network" "mariadb_client_westeurope" {
+  name                = "mariadb_client_westeurope-network"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.mariadb_client.location
-  resource_group_name = azurerm_resource_group.mariadb_client.name
+  location            = azurerm_resource_group.mariadb_client_westeurope.location
+  resource_group_name = azurerm_resource_group.mariadb_client_westeurope.name
 }
 
-resource "azurerm_subnet" "mariadb_client" {
+resource "azurerm_subnet" "mariadb_client_westeurope" {
   name                 = "internal"
-  resource_group_name  = azurerm_resource_group.mariadb_client.name
-  virtual_network_name = azurerm_virtual_network.mariadb_client.name
+  resource_group_name  = azurerm_resource_group.mariadb_client_westeurope.name
+  virtual_network_name = azurerm_virtual_network.mariadb_client_westeurope.name
   address_prefix       = "10.0.2.0/24"
 }
 
-resource "azurerm_public_ip" "mariadb_client" {
+resource "azurerm_public_ip" "mariadb_client_westeurope" {
   count = var.instances_count
 
-  name                    = "mariadb_client${count.index}-ip"
-  location                = azurerm_resource_group.mariadb_client.location
-  resource_group_name     = azurerm_resource_group.mariadb_client.name
+  name                    = "mariadb_client_westeurope${count.index}-ip"
+  location                = azurerm_resource_group.mariadb_client_westeurope.location
+  resource_group_name     = azurerm_resource_group.mariadb_client_westeurope.name
   allocation_method       = "Static"
   idle_timeout_in_minutes = 30
 }
 
-resource "azurerm_network_interface" "mariadb_client" {
+resource "azurerm_network_interface" "mariadb_client_westeurope" {
   count = var.instances_count
-  name                = "mariadb_client${count.index}-nic"
-  location            = azurerm_resource_group.mariadb_client.location
-  resource_group_name = azurerm_resource_group.mariadb_client.name
+  name                = "mariadb_client_westeurope${count.index}-nic"
+  location            = azurerm_resource_group.mariadb_client_westeurope.location
+  resource_group_name = azurerm_resource_group.mariadb_client_westeurope.name
 
   ip_configuration {
     name                          = "internal"
-    subnet_id                     = azurerm_subnet.mariadb_client.id
+    subnet_id                     = azurerm_subnet.mariadb_client_westeurope.id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.mariadb_client[count.index].id
+    public_ip_address_id          = azurerm_public_ip.mariadb_client_westeurope[count.index].id
   }
 }
 
-resource "azurerm_linux_virtual_machine" "mariadb_client" {
+resource "azurerm_linux_virtual_machine" "mariadb_client_westeurope" {
   count = var.instances_count
-  name                = "mariadb-client${count.index}-cloud"
-  resource_group_name = azurerm_resource_group.mariadb_client.name
-  location            = azurerm_resource_group.mariadb_client.location
+  name                = "mariadb-client${count.index}-westeurope-cloud"
+  resource_group_name = azurerm_resource_group.mariadb_client_westeurope.name
+  location            = azurerm_resource_group.mariadb_client_westeurope.location
   size                = "Standard_B1ms"
   admin_username      = "epitech"
   network_interface_ids = [
-    azurerm_network_interface.mariadb_client[count.index].id,
+    azurerm_network_interface.mariadb_client_westeurope[count.index].id,
   ]
 
   admin_ssh_key {
@@ -72,7 +72,7 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
   provisioner "remote-exec" {
     connection {
       type = "ssh"
-      host = azurerm_public_ip.mariadb_client[count.index].ip_address
+      host = azurerm_public_ip.mariadb_client_westeurope[count.index].ip_address
       user = "epitech"
       private_key = file("~/.ssh/id_rsa")
     }
@@ -82,6 +82,6 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
   }
 
   provisioner "local-exec" {
-    command = "echo '${azurerm_public_ip.mariadb_client[count.index].ip_address} server_id=100${count.index}' >> inventory"
+    command = "echo '${azurerm_public_ip.mariadb_client_westeurope[count.index].ip_address} server_id=100${count.index}' >> inventory"
   }
 }

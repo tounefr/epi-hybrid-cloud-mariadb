@@ -2,6 +2,5 @@
 10.42.42.1 ansible_user=thomas server_id=1
 
 [db-slaves]
-52.178.43.73 server_id=1001
-52.178.43.79 server_id=1000
-52.178.43.77 server_id=1002
+13.69.52.217 server_id=1000
+23.102.39.68 server_id=1000
