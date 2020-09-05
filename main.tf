@@ -1,3 +1,8 @@
+variable "instances_count" {
+  type = string
+  default = 1
+}
+
 provider "azurerm" {
   features {}
 }
@@ -22,7 +27,7 @@ resource "azurerm_subnet" "mariadb_client" {
 }
 
 resource "azurerm_public_ip" "mariadb_client" {
-  count = 2
+  count = var.instances_count
 
   name                    = "mariadb_client${count.index}-ip"
   location                = azurerm_resource_group.mariadb_client.location
@@ -32,7 +37,7 @@ resource "azurerm_public_ip" "mariadb_client" {
 }
 
 resource "azurerm_network_interface" "mariadb_client" {
-  count = 2
+  count = var.instances_count
   name                = "mariadb_client${count.index}-nic"
   location            = azurerm_resource_group.mariadb_client.location
   resource_group_name = azurerm_resource_group.mariadb_client.name
@@ -59,12 +64,12 @@ data "azurerm_public_ip" "mariadb_client" {
 #    azurerm_resource_group.mariadb_client
 #  ]
   name = "mariadb_client${count.index}-ip"
-  count = 2
+  count = var.instances_count
   resource_group_name = azurerm_resource_group.mariadb_client.name 
 }
 
 resource "azurerm_linux_virtual_machine" "mariadb_client" {
-  count = 2
+  count = var.instances_count
   name                = "mariadb-client${count.index}-cloud"
   resource_group_name = azurerm_resource_group.mariadb_client.name
   location            = azurerm_resource_group.mariadb_client.location
@@ -85,9 +90,9 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
   }
 
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "18.04-LTS"
+    publisher = "OpenLogic"
+    offer     = "CentOS"
+    sku       = "7.6"
     version   = "latest"
   }
 
@@ -108,28 +113,6 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
 #      "sudo mysql -u root -e \"STOP SLAVE; CHANGE MASTER TO MASTER_HOST='cloud-epitech.thomas-henon.fr', MASTER_USER='epitech',MASTER_PASSWORD='Epitech_1*',MASTER_PORT=3306,MASTER_CONNECT_RETRY=10;START SLAVE;\""
     ]
   }
-}
-
-resource "null_resource" "test" {
-  count = 2
-  provisioner "remote-exec" {
-    connection {
-      type = "ssh"
-      host = azurerm_public_ip.mariadb_client[count.index].ip_address
-      user = "epitech"
-      private_key = file("~/.ssh/id_rsa")
-    }
-
-    inline = [
-      "sudo apt update -y || exit 0",
-      "sudo apt install mariadb-server -y",
-      "sudo systemctl stop mariadb",
-      "sudo bash -c \"echo 'server-id = 10${count.index}' >> /etc/mysql/mariadb.conf.d/50-server.cnf\"",
-      "sudo systemctl start mariadb",
-#      "sudo mysql -u root -e \"STOP SLAVE; CHANGE MASTER TO MASTER_HOST='cloud-epitech.thomas-henon.fr', MASTER_USER='epitech',MASTER_PASSWORD='Epitech_1*',MASTER_PORT=3306,MASTER_CONNECT_RETRY=10;START SLAVE;\""
-    ]
-  }
-
 }
 
 output "public_ip_address" {
