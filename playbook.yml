@@ -1,0 +1,56 @@
+---
+- name: Install mariadb server
+  hosts: db-slaves
+  user: epitech
+  become: true
+  vars:
+    mariadb_mirror: 'mariadb.mirror.nucleus.be/yum'
+    mariadb_bind_address: '127.0.0.1'
+    mariadb_root_password: 'Epitech_1*'
+    mariadb_server_cnf:
+      general-log:
+      general-log-file: 'queries.log'
+      slow-query-log:
+      slow-query-log-file: 'mariadb-slow.log'
+      long-query-time: '5.0'
+      server-id: "{{ server_id }}"
+    mariadb_custom_cnf:
+      mariadb:
+        autoset_open_files_limit:
+        max-connections: '20'
+      mysqld:
+        language: /usr/share/mysql/dutch
+    mariadb_configure_swappiness: true
+    mariadb_swappiness: '10'
+  roles:
+    - role: bertvv.mariadb
+- name: Configure slaves
+  hosts: db-slaves
+  user: epitech
+  become: true
+  tasks:
+    - mysql_replication:
+        mode: stopslave
+    - mysql_replication:
+        mode: changemaster
+        master_host: 51.159.64.91
+        master_port: 3306
+        master_ssl: false
+        master_connect_retry: 10
+        master_user: epitech
+        master_password: 'Epitech_1*'
+        #master_log_file: mariadb-bin.000096
+        #master_log_pos: 568
+    - mysql_replication:
+        mode: startslave
+- name: Check slaves
+  hosts: db-slaves
+  user: epitech
+  become: true
+  tasks:
+    - mysql_replication:
+        mode: getslave
+        login_host: 51.159.64.91 
+        login_port: 3306
+        login_user: epitech
+        login_password: 'Epitech_1*'

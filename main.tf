@@ -1,6 +1,11 @@
 variable "instances_count" {
   type = string
-  default = 1
+  default = 3
+}
+
+variable "inventory-path" {
+  type = string
+  default = "./inventory"
 }
 
 provider "azurerm" {
@@ -42,10 +47,6 @@ resource "azurerm_network_interface" "mariadb_client" {
   location            = azurerm_resource_group.mariadb_client.location
   resource_group_name = azurerm_resource_group.mariadb_client.name
 
-#  depends_on = [
-#    azurerm_public_ip.*.mariadb_client.id 
-#  ]
-
   ip_configuration {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.mariadb_client.id
@@ -57,12 +58,7 @@ resource "azurerm_network_interface" "mariadb_client" {
 data "azurerm_public_ip" "mariadb_client" {
   depends_on = [
     azurerm_public_ip.mariadb_client
-#    azurerm_linux_virtual_machine.mariadb_client
   ]
-#  name                = azurerm_public_ip.mariadb_client[count.index].name
-#  depends_on = [
-#    azurerm_resource_group.mariadb_client
-#  ]
   name = "mariadb_client${count.index}-ip"
   count = var.instances_count
   resource_group_name = azurerm_resource_group.mariadb_client.name 
@@ -105,13 +101,11 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
     }
 
     inline = [
-      "sudo apt update -y || exit 0",
-#      "sudo apt install mariadb-server -y",
-#      "sudo systemctl stop mariadb",
-#      "sudo bash -c \"echo 'server-id = 100' >> /etc/mysql/mariadb.conf.d/50-server.cnf\"",
-#      "sudo systemctl start mariadb",
-#      "sudo mysql -u root -e \"STOP SLAVE; CHANGE MASTER TO MASTER_HOST='cloud-epitech.thomas-henon.fr', MASTER_USER='epitech',MASTER_PASSWORD='Epitech_1*',MASTER_PORT=3306,MASTER_CONNECT_RETRY=10;START SLAVE;\""
     ]
+  }
+
+  provisioner "local-exec" {
+    command = "echo '${azurerm_public_ip.mariadb_client[count.index].ip_address} server_id=100${count.index}' >> inventory"
   }
 }
 
