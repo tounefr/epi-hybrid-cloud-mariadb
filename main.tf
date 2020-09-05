@@ -1,17 +1,3 @@
-variable "instances_count" {
-  type = string
-  default = 3
-}
-
-variable "inventory-path" {
-  type = string
-  default = "./inventory"
-}
-
-provider "azurerm" {
-  features {}
-}
-
 resource "azurerm_resource_group" "mariadb_client" {
   name     = "mariadb_client-resources"
   location = "West Europe"
@@ -53,15 +39,6 @@ resource "azurerm_network_interface" "mariadb_client" {
     private_ip_address_allocation = "Dynamic"
     public_ip_address_id          = azurerm_public_ip.mariadb_client[count.index].id
   }
-}
-
-data "azurerm_public_ip" "mariadb_client" {
-  depends_on = [
-    azurerm_public_ip.mariadb_client
-  ]
-  name = "mariadb_client${count.index}-ip"
-  count = var.instances_count
-  resource_group_name = azurerm_resource_group.mariadb_client.name 
 }
 
 resource "azurerm_linux_virtual_machine" "mariadb_client" {
@@ -107,8 +84,4 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
   provisioner "local-exec" {
     command = "echo '${azurerm_public_ip.mariadb_client[count.index].ip_address} server_id=100${count.index}' >> inventory"
   }
-}
-
-output "public_ip_address" {
-  value = data.azurerm_public_ip.mariadb_client.*.ip_address
 }
