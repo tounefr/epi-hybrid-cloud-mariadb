@@ -1,8 +1,11 @@
 # Prérequis
-* Ansible
-* ansible-galaxy install bertvv.mariadb
-* Terraform
-* CLI Azure
+## Ansible
+1. Installer le role d'installer du serveur mariadb
+> ansible-galaxy install bertvv.mariadb
+## Terraform
+## CLI Azure
+1. Installer la CLI Azure
+2. Configurer les clés API
 
 # Déploiement des applicatifs
 Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'inventaire ansible
