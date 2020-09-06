@@ -38,6 +38,7 @@ module "myazure_francecentral" {
 }
 ```
 > terraform apply
+
 Génère un inventaire Ansible  
 > cat inventory
 
