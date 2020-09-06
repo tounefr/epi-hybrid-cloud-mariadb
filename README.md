@@ -35,3 +35,4 @@ Voir pra_aws.docx
 
 # 5. TODO
 1. SSL MySQL slaves <--> master
+2. Refactoriser Ansible et Terraform
