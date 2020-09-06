@@ -32,3 +32,6 @@ Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'i
 
 # 4. Procédure de PRA pour déployer l'ensemble du cloud privé chez AWS
 Voir pra_aws.docx
+
+# 5. TODO
+1. SSL MySQL slaves <--> master
