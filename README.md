@@ -7,6 +7,7 @@
 ## Déploiement des applicatifs
 Créer les instances publics et génèrer un fichier d'inventaire ansible
 > terraform apply
+
 > cat inventory
 
 ## Déploiement MariaDB 
