@@ -24,7 +24,7 @@ Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'i
 > ansible-playbook --inventory-file=./inventory install-mariadb-slave-private.yml
 
 ## Configuration des instances publics
-> ansible-playbook --inventory-file=./inventory install-mariadb-slave-cloud.yml
+> ansible-playbook --inventory-file=./inventory install-mariadb-slave-public.yml
 
 # 3. Script de postinstall de vérification de l'état des clients MariaDB
 
