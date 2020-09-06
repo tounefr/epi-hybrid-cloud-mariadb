@@ -1,4 +1,4 @@
-# Prérequis
+# 1. Prérequis
 ## Ansible
 1. Installer le role d'installer du serveur mariadb
 > ansible-galaxy install bertvv.mariadb
@@ -7,7 +7,7 @@
 1. Installer la CLI Azure
 2. Configurer les clés API
 
-# Déploiement des applicatifs
+# 2. Déploiement des applicatifs
 Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'inventaire ansible
 > terraform apply
 
@@ -26,9 +26,9 @@ Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'i
 ## Configuration des instances publics
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory install-mariadb-slave-cloud.yml
 
-# Script de postinstall de vérification de l'état des clients MariaDB
+# 3. Script de postinstall de vérification de l'état des clients MariaDB
 
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory check-slaves.yml
 
-# Procédure de PRA pour déployer l'ensemble du cloud privé chez AWS
+# 4. Procédure de PRA pour déployer l'ensemble du cloud privé chez AWS
 Voir pra_aws.docx
