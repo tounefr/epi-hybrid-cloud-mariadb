@@ -1,0 +1,19 @@
+---
+- name: Configure slaves
+  hosts: db-slaves-private
+  become: true
+  tasks:
+    - mysql_replication:
+        mode: stopslave
+    - mysql_replication:
+        mode: changemaster
+        master_host: '10.42.42.1'
+        master_port: 3306
+        master_ssl: false
+        master_connect_retry: 10
+        master_user: 'epitech'
+        master_password: 'Epitech_1*'
+        master_log_file: 'mysql-replication.000002'
+        master_log_pos: 499
+    - mysql_replication:
+        mode: startslave

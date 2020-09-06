@@ -1,0 +1,19 @@
+---
+- name: Configure slaves
+  hosts: db-slaves-cloud
+  become: true
+  tasks:
+    - mysql_replication:
+        mode: stopslave
+    - mysql_replication:
+        mode: changemaster
+        master_host: 'cloud-epitech.thomas-henon.fr'
+        master_port: 3306
+        master_ssl: false
+        master_connect_retry: 10
+        master_user: 'epitech'
+        master_password: 'Epitech_1*'
+        master_log_file: 'mysql-replication.000004'
+        master_log_pos: 806
+    - mysql_replication:
+        mode: startslave

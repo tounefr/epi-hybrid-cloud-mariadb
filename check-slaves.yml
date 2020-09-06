@@ -1,0 +1,23 @@
+---
+- name: Check private slaves
+  hosts:
+    - db-slaves-private
+  become: true
+  tasks:
+    - mysql_replication:
+        mode: getslave
+        login_host: '10.42.42.1'
+        login_port: 3306
+        login_user: epitech
+        login_password: 'Epitech_1*'
+- name: Check public slaves
+  hosts:
+    - db-slaves-private
+  become: true
+  tasks:
+    - mysql_replication:
+        mode: getslave
+        login_host: 'cloud-epitech.thomas-henon.fr'
+        login_port: 3306
+        login_user: epitech
+        login_password: 'Epitech_1*'

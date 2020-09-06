@@ -1,8 +1,9 @@
 ---
 - name: Install mariadb server
   hosts:
-    - db-slaves
     - db-master
+    - db-slaves-public
+    - db-slaves-private
   become: true
   vars:
     mariadb_mirror: 'mariadb.mirror.nucleus.be/yum'
@@ -25,19 +26,20 @@
         language: /usr/share/mysql/dutch
     mariadb_configure_swappiness: true
     mariadb_swappiness: '10'
-    #    mariadb_databases:
-    #      - name: epitech 
-        #    mariadb_users:
-        #      - name: epitech
-        #       password: 'Epitech_1*'
-        #       priv: 'epitech.*:ALL'
-        #        host: '%'
+    mariadb_databases:
+      - name: epitech 
+        mariadb_users:
+          - name: epitech
+            password: 'Epitech_1*'
+            priv: 'epitech.*:ALL'
+            host: '%'
   roles:
     - role: bertvv.mariadb
 - name: Start mariadb
   hosts:
-    - db-slaves
     - db-master
+    - db-slaves-public
+    - db-slaves-private
   become: true
   tasks:
     - service:
@@ -45,38 +47,11 @@
         state: started
 - name: Stop firewalld
   hosts:
-    - db-slaves
     - db-master
+    - db-slaves-public
+    - db-slaves-private
   become: true
   tasks:
     - service:
         name: firewalld
         state: stopped
-- name: Configure slaves
-  hosts: db-slaves
-  become: true
-  tasks:
-    - mysql_replication:
-        mode: stopslave
-    - mysql_replication:
-        mode: changemaster
-        master_host: 51.159.64.91
-        master_port: 3306
-        master_ssl: false
-        master_connect_retry: 10
-        master_user: 'epitech'
-        master_password: 'Epitech_1*'
-        master_log_file: 'mysql-replication.000002'
-        master_log_pos: 499
-    - mysql_replication:
-        mode: startslave
-- name: Check slaves
-  hosts: db-slaves
-  become: true
-  tasks:
-    - mysql_replication:
-        mode: getslave
-        login_host: 51.159.64.91 
-        login_port: 3306
-        login_user: epitech
-        login_password: 'Epitech_1*'
