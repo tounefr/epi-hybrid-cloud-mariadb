@@ -14,13 +14,13 @@ Créer les instances publics et génèrer un fichier d'inventaire ansible
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory install-mariadb.yml
 
 ## Configuration de la réplication
-### File and Position
+### Récuprer varibles File and Position
 > ansible db-master -i inventory -a "sudo mysql -u root -p -e'show master status'"
 
-### instances privées
+### Instances privées
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory install-mariadb-slave-private.yml
 
-### instances publics
+### Instances publics
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory install-mariadb-slave-cloud.yml
 
 ## Script de postinstall de vérification de l'état des clients MariaDB
