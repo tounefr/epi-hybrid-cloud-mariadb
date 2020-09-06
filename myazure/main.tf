@@ -82,6 +82,6 @@ resource "azurerm_linux_virtual_machine" "mariadb_client" {
   }
 
   provisioner "local-exec" {
-    command = "echo '${azurerm_public_ip.mariadb_client[count.index].ip_address} server_id=${var.serverid_prefix}00${count.index}' >> inventory"
+    command = "echo '${azurerm_public_ip.mariadb_client[count.index].ip_address} ansible_user=${azurerm_linux_virtual_machine.mariadb_client.admin_username} server_id=${var.serverid_prefix}00${count.index}' >> inventory"
   }
 }
