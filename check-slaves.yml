@@ -1,7 +1,6 @@
 ---
 - name: Check private slaves
-  hosts:
-    - db-slaves-private
+  hosts: db-slaves-private
   become: true
   tasks:
     - mysql_replication:
@@ -11,8 +10,7 @@
         login_user: epitech
         login_password: 'Epitech_1*'
 - name: Check public slaves
-  hosts:
-    - db-slaves-public
+  hosts: db-slaves-public
   become: true
   tasks:
     - mysql_replication:

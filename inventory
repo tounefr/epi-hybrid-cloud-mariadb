@@ -5,7 +5,7 @@
 10.42.42.2 ansible_user=thomas server_id=1000
 10.42.42.3 ansible_user=thomas server_id=1001
 
-[db-slaves-cloud]
-40.115.118.150 server_id=3000
-40.89.159.55 server_id=4000
-13.93.44.38 server_id=2000
+[db-slaves-public]
+20.43.32.73 ansible_user=epitech server_id=4000
+13.95.7.215 ansible_user=epitech server_id=2000
+137.135.177.56 ansible_user=epitech server_id=3000
