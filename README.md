@@ -5,7 +5,7 @@
 * CLI Azure
 
 # Déploiement des applicatifs
-Créer les instances publics vers 3 zones distinctes et génèrer qui génère un fichier d'inventaire ansible
+Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'inventaire ansible
 > terraform apply
 
 > cat inventory
