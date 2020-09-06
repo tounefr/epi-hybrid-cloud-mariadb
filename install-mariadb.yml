@@ -45,6 +45,7 @@
     - service:
         name: mariadb
         state: started
+        enabled: true
 - name: Stop firewalld
   hosts:
     - db-master
@@ -55,3 +56,4 @@
     - service:
         name: firewalld
         state: stopped
+        enabled: true
