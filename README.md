@@ -28,3 +28,4 @@ Créer les instances publics et génèrer un fichier d'inventaire ansible
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory check-slaves.yml
 
 ## Procédure de PRA pour déployer l'ensemble du cloud privé chez AWS
+Voir pra_aws.docx
