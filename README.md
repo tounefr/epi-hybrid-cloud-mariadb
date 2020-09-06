@@ -17,7 +17,7 @@ Créer les instances publics vers 3 zones distinctes et génèrer un fichier d'i
 > ANSIBLE_REMOTE_USER=epitech ansible-playbook --inventory-file=./inventory install-mariadb.yml
 
 # Configuration de la réplication
-## Récupérer les variables File and Position
+## Récupérer les variables File and Position du master mariadb
 > ansible db-master -i inventory -a "sudo mysql -u root -p -e'show master status'"
 
 ## Configuration des instances privées
